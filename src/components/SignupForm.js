@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Checkbox,
-  Radio,
-  Space,
-} from "antd";
+import { Button, Form, Input, InputNumber, message, Modal, Select } from "antd";
 import {
   LockOutlined,
   UserOutlined,
@@ -20,6 +10,8 @@ import {
   ShoppingOutlined,
 } from "@ant-design/icons";
 import { signup } from "../utils";
+
+const { Option } = Select;
 
 class SignupForm extends React.Component {
   formRef_ngo = React.createRef();
@@ -224,6 +216,22 @@ class SignupForm extends React.Component {
                 placeholder="Address"
                 disabled={this.state.loading_ngo}
               />
+            </Form.Item>
+            {/* categories */}
+            <Form.Item
+              name="prefCategory"
+              rules={[
+                {
+                  required: true,
+                  message: "Please selct one pick-up category!",
+                },
+              ]}
+            >
+              <Select defaultValue={"Pick-up category"}>
+                <Option value="Food">Food</Option>
+                <Option value="Clothes">Clothes</Option>
+                <Option value="Electronics">Electronics</Option>
+              </Select>
             </Form.Item>
 
             {/* preffered pick-up radius */}
