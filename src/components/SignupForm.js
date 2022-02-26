@@ -22,14 +22,16 @@ import {
 import { signup } from "../utils";
 
 class SignupForm extends React.Component {
-  formRef = React.createRef();
+  formRef_ngo = React.createRef();
+  formRef_donor = React.createRef();
 
   state = {
     //弹窗
     displayModal_ngo: false,
     displayModal_donor: false,
     asNGO: false,
-    loading: false,
+    loading_ngo: false,
+    loading_donor: false,
   };
 
   signupOnclick_ngo = () => {
@@ -75,7 +77,7 @@ class SignupForm extends React.Component {
   };
 
   handleSubmit_ngo = async () => {
-    const formInstance = this.formRef.current;
+    const formInstance = this.formRef_ngo.current;
     try {
       await formInstance.validateFields();
     } catch (error) {
@@ -83,7 +85,7 @@ class SignupForm extends React.Component {
     }
 
     this.setState({
-      loading: true,
+      loading_ngo: true,
     });
 
     try {
@@ -93,12 +95,34 @@ class SignupForm extends React.Component {
       message.error(error.message);
     } finally {
       this.setState({
-        loading: false,
+        loading_ngo: false,
       });
     }
   };
 
-  handleSubmit_donor = () => {};
+  handleSubmit_donor = async () => {
+    const formInstance = this.formRef_donor.current;
+    try {
+      await formInstance.validateFields();
+    } catch (error) {
+      return;
+    }
+
+    this.setState({
+      loading_donor: true,
+    });
+
+    try {
+      await signup(formInstance.getFieldsValue(true), this.state.asNGO);
+      message.success("Sign Up Successfully!");
+    } catch (error) {
+      message.error(error.message);
+    } finally {
+      this.setState({
+        loading_donor: false,
+      });
+    }
+  };
 
   render = () => {
     return (
@@ -125,19 +149,21 @@ class SignupForm extends React.Component {
         >
           <Form
             name="normal_signup"
+            ref={this.formRef_ngo}
             initialValues={{ remember: true }}
             onFinish={this.onFinish_ngo}
-            // preserve={flase}
           >
             {/* email */}
             <Form.Item
-              name="email"
-              rules={[{ required: true, message: "Please input your email!" }]}
+              name="username"
+              rules={[
+                { required: true, message: "Please input your username!" },
+              ]}
             >
               <Input
                 prefix={<MailOutlined />}
-                placeholder="Email"
-                disabled={this.state.loading}
+                placeholder="Username"
+                disabled={this.state.loading_ngo}
               />
             </Form.Item>
 
@@ -151,7 +177,7 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<LockOutlined />}
                 placeholder="Password"
-                disabled={this.state.loading}
+                disabled={this.state.loading_ngo}
               />
             </Form.Item>
 
@@ -165,13 +191,13 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<UserOutlined />}
                 placeholder="Name"
-                disabled={this.state.loading}
+                disabled={this.state.loading_ngo}
               />
             </Form.Item>
 
             {/* phone number */}
             <Form.Item
-              name="phoneNumber"
+              name="contact"
               rules={[
                 {
                   required: true,
@@ -181,8 +207,8 @@ class SignupForm extends React.Component {
             >
               <Input
                 prefix={<PhoneOutlined />}
-                placeholder="Phone Number"
-                disabled={this.state.loading}
+                placeholder="Contact"
+                disabled={this.state.loading_ngo}
               />
             </Form.Item>
 
@@ -196,25 +222,24 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<HomeOutlined />}
                 placeholder="Address"
-                disabled={this.state.loading}
+                disabled={this.state.loading_ngo}
               />
             </Form.Item>
 
             {/* preffered pick-up radius */}
             <Form.Item
-              name="radius"
+              name="distance"
               rules={[
                 {
                   required: true,
-                  message: "Please input preffered pick-up radius!",
+                  message: "Please input preffered pick-up distance!",
                 },
               ]}
-              label="Pick-up radius"
+              label="Pick-up distance"
             >
               <InputNumber
                 prefix={<CompassOutlined />}
-                // placeholder="Pick-up radius"
-                disabled={this.state.loading}
+                disabled={this.state.loading_ngo}
                 addonAfter="KM"
                 defaultValue={0}
               />
@@ -222,7 +247,7 @@ class SignupForm extends React.Component {
 
             {/* prefered pick-up weight */}
             <Form.Item
-              name="weight"
+              name="prefWeight"
               rules={[
                 {
                   required: true,
@@ -233,8 +258,7 @@ class SignupForm extends React.Component {
             >
               <InputNumber
                 prefix={<ShoppingOutlined />}
-                // placeholder="Pick-up weight"
-                disabled={this.state.loading}
+                disabled={this.state.loading_ngo}
                 addonAfter="KG"
                 defaultValue={0}
               />
@@ -242,7 +266,7 @@ class SignupForm extends React.Component {
 
             <Button
               type="primary"
-              disabled={this.state.loading}
+              disabled={this.state.loading_ngo}
               onClick={this.handleSubmit_ngo}
             >
               Submit
@@ -260,19 +284,21 @@ class SignupForm extends React.Component {
         >
           <Form
             name="normal_signup"
+            ref={this.formRef_donor}
             initialValues={{ remember: true }}
             onFinish={this.onFinish_donor}
-            // preserve={flase}
           >
             {/* email */}
             <Form.Item
-              name="email"
-              rules={[{ required: true, message: "Please input your email!" }]}
+              name="username"
+              rules={[
+                { required: true, message: "Please input your username!" },
+              ]}
             >
               <Input
                 prefix={<MailOutlined />}
-                placeholder="Email"
-                disabled={this.state.loading}
+                placeholder="Username"
+                disabled={this.state.loading_donor}
               />
             </Form.Item>
 
@@ -286,7 +312,7 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<LockOutlined />}
                 placeholder="Password"
-                disabled={this.state.loading}
+                disabled={this.state.loading_donor}
               />
             </Form.Item>
 
@@ -300,13 +326,13 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<UserOutlined />}
                 placeholder="Name"
-                disabled={this.state.loading}
+                disabled={this.state.loading_donor}
               />
             </Form.Item>
 
             {/* phone number */}
             <Form.Item
-              name="phoneNumber"
+              name="contact"
               rules={[
                 {
                   required: true,
@@ -316,8 +342,8 @@ class SignupForm extends React.Component {
             >
               <Input
                 prefix={<PhoneOutlined />}
-                placeholder="Phone Number"
-                disabled={this.state.loading}
+                placeholder="Contact"
+                disabled={this.state.loading_donor}
               />
             </Form.Item>
 
@@ -331,13 +357,13 @@ class SignupForm extends React.Component {
               <Input
                 prefix={<HomeOutlined />}
                 placeholder="Address"
-                disabled={this.state.loading}
+                disabled={this.state.loading_donor}
               />
             </Form.Item>
 
             <Button
               type="primary"
-              disabled={this.state.loading}
+              disabled={this.state.loading_donor}
               onClick={this.handleSubmit_donor}
             >
               Submit
@@ -350,21 +376,3 @@ class SignupForm extends React.Component {
 }
 
 export default SignupForm;
-
-// {
-//   /* status */
-// }
-// <Form.Item
-//   name="radio-button"
-//   label="Status"
-//   rules={[{ required: true, message: "Please pick one!" }]}
-// >
-//   <Radio.Group>
-//     <Radio value="Donator" onChange={this.handleDonatorChange}>
-//       Donator
-//     </Radio>
-//     <Radio value="NGO" onChange={this.handleNGOChange}>
-//       NGO
-//     </Radio>
-//   </Radio.Group>
-// </Form.Item>;
