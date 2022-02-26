@@ -1,7 +1,7 @@
 const domain = "http://localhost:8080"; // delpoy后跑起来的url 目前填localhost
 
 export const signup = (credential, asNGO) => {
-  const signupUrl = `${domain}/signup/${asNGO ? "ngo" : "donor"}`;
+  const signupUrl = `${domain}/register/${asNGO ? "ngo" : "donor"}`;
   return fetch(signupUrl, {
     method: "POST",
     headers: {
@@ -9,6 +9,9 @@ export const signup = (credential, asNGO) => {
     },
     body: JSON.stringify(credential),
   }).then((response) => {
+    if (response.status == 409) {
+      throw Error("Username already exists");
+    }
     if (response.status !== 200) {
       throw Error("Fail to sign up");
     }

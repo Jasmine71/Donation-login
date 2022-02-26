@@ -53,19 +53,15 @@ class SignupForm extends React.Component {
   };
 
   onFinish_ngo = () => {
-    {
-      this.setState({
-        displayModal_ngo: false,
-      });
-    }
+    this.setState({
+      displayModal_ngo: false,
+    });
   };
 
   onFinish_donor = () => {
-    {
-      this.setState({
-        displayModal_donor: false,
-      });
-    }
+    this.setState({
+      displayModal_donor: false,
+    });
   };
 
   handleSubmit_ngo = async () => {
@@ -120,7 +116,7 @@ class SignupForm extends React.Component {
     return (
       <>
         <Button type="danger" size={"middle"} onClick={this.signupOnclick_ngo}>
-          As NGO
+          Be NGO
         </Button>
 
         <Button
@@ -128,7 +124,7 @@ class SignupForm extends React.Component {
           size={"middle"}
           onClick={this.signupOnclick_donor}
         >
-          As Donor
+          Be Donor
         </Button>
 
         {/* ngo modal */}
